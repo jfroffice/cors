@@ -1,0 +1,11 @@
+{
+  "name": "express-livereload",
+  "version": "0.1.0",
+  "ignore": [
+    ".jshintrc",
+    "**/*.txt"
+  ],
+  "dependencies": {
+    "jquery": "*"
+  }
+}

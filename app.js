@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -8,9 +7,9 @@ var express = require('express'),
 	livereload = require('express-livereload'),
 	cors = require('cors'),
 	config = require('./config'),
-	path = require('path');
-
-var app = express();
+	upload = require('./service/upload'),
+	path = require('path'),
+	app = express();
 
 livereload(app, {
 	watchDir: __dirname + '/public'
@@ -32,8 +31,8 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+upload.init(app);
+
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
-
-

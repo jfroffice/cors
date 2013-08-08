@@ -17,18 +17,23 @@ exports.init = function(app) {
 
 		var file = getFile(req.files);
 
+        console.log(req.body);
+
         if (!file) {
-            res.send({ result: 'KO'});
+            res.send({ err: 'no files received'});
             return;
         }
 
-        console.log(file);
-
-        var newPath = path.resolve(__dirname, '../upload/' + FILENAME);
+        var newPath = path.resolve(__dirname, '../upload/' + file.name);
 
 		fs.rename(file.path, newPath, function (err) {
 			if (err) throw err;
-		  	res.send({ result: 'OK'});
+
+            var resp = {};
+            if (req.body.data) {
+                resp.data = JSON.parse(req.body.data);
+            }
+		  	res.send(resp);
 		});
    });
 };

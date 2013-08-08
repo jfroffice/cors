@@ -18,7 +18,9 @@ livereload(app, {
 // all environments
 app.set('port', process.env.PORT || config.port);
 app.use(express.logger('dev'));
-app.use(express.bodyParser());
+app.use(express.bodyParser({
+    uploadDir: __dirname + '/upload'
+}));
 app.use(express.methodOverride());
 app.use(cors({
 	origin: config.cors.origin

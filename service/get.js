@@ -10,6 +10,10 @@ exports.init = function(app) {
         return path.resolve(__dirname, '../upload/' + params.id + '/' + params.module + '/' + params.filename);
     }
 
+    function getFilenameId(params) {
+        return path.resolve(__dirname, '../upload/' + params.id);
+    }
+
 	function render(res, filename) {
 		fs.createReadStream(filename)
 			.on('error', function(err){
@@ -54,16 +58,8 @@ exports.init = function(app) {
         });
     }
 
-	app.get('/:id/:module/:filename', function(req, res) {
-		render(res, getFilename(req.params));
-    });
-
-    app.get('/:id/:module/:filename/:width', function(req, res) {
-
-        var srcPath = getFilename(req.params),
-			width = req.params.width;
-
-		resizeRender(res, {
+    function resizeRenderWidth(res, srcPath, width) {
+        resizeRender(res, {
             srcPath: srcPath,
             dstPath: srcPath + '.' + width + TMP,
             width: width + '\>',
@@ -71,13 +67,10 @@ exports.init = function(app) {
             sharpening: 0,
             filter: false,
         });
-    });
+    }
 
-    app.get('/:id/:module/:filename/:width/:height', function(req, res) {
+    function resizeRenderWidthHeight(res, srcPath, width, height) {
 
-        var srcPath = getFilename(req.params),
-			width = req.params.width,
-			height = req.params.height;
 
         resizeRender(res, {
             srcPath: srcPath,
@@ -88,5 +81,29 @@ exports.init = function(app) {
             sharpening: 0,
             filter: false,
         });
+    }
+
+    app.get('/get/:id', function(req, res) {
+        render(res, getFilenameId(req.params));
+    });
+
+    app.get('/get/:id/:width', function(req, res) {
+        resizeRenderWidth(res, getFilenameId(req.params), req.params.width);
+    });
+
+    app.get('/get/:id/:width/:height', function(req, res) {
+        resizeRenderWidthHeight(res, getFilenameId(req.params), req.params.width, req.params.height);
+    });
+
+	app.get('/:id/:module/:filename', function(req, res) {
+		render(res, getFilename(req.params));
+    });
+
+    app.get('/:id/:module/:filename/:width', function(req, res) {
+        resizeRenderWidth(res, getFilename(req.params), req.params.width);
+    });
+
+    app.get('/:id/:module/:filename/:width/:height', function(req, res) {
+        resizeRenderWidthHeight(res, getFilename(req.params), req.params.width, req.params.height);
     });
 };

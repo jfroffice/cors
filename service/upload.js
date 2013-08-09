@@ -4,7 +4,7 @@ var fs = require('fs'),
 
 exports.init = function(app) {
 
- 	function getFile(files) {
+    function getFile(files) {
         if (files.file) {
             return files.file;
         } else if (files.files) {
@@ -14,10 +14,10 @@ exports.init = function(app) {
         }
     }
 
-  	app.post('/upload', function(req, res) {
+    app.post('/', function(req, res) {
 
 		var file = getFile(req.files),
-            data = JSON.parse(req.body.data),
+            data = req.body.data ? JSON.parse(req.body.data) : null,
             dst = '../upload/';
 
         if (!file) {
@@ -27,34 +27,25 @@ exports.init = function(app) {
 
         // check if id in allow ?
         // if not refuse CORS
+        var filename;
+
         if (data) {
-            var id = data.id,
-                module = data.module,
-                filename = data.filename || file.name;
+            filename = data.id + '/' + data.module + '/' + (data.filename || file.name);
 
-            if (id) {
-                dst += id + '/';
-            }
+            var root = path.resolve(__dirname, dst),
+                newPath = path.resolve(__dirname, dst + filename);
 
-            if (module) {
-                dst += module + '/';
-            }
+            mkdirp.sync(root);
+
+            fs.rename(file.path, newPath, function (err) {
+                if (err) throw err;
+            });
+        } else {
+            filename = 'get/' + path.basename(file.path);
         }
 
-        var root = path.resolve(__dirname, dst),
-            newPath = path.resolve(__dirname, dst + filename);
-
-        mkdirp.sync(root);
-
-		fs.rename(file.path, newPath, function (err) {
-			if (err) throw err;
-
-            var resp = {};
-            if (req.body.data) {
-                resp.data = data;
-                resp.path = newPath;
-            }
-		  	res.send(resp);
-		});
+        res.send({
+            url: 'http://' + req.headers.host + '/' + filename
+        });
    });
 };

@@ -35,43 +35,58 @@ exports.init = function(app) {
 		return path.resolve(__dirname, '../upload/' + params.id + '/' + params.module + '/' + params.filename);
 	}
 
-	app.get('/:id/:module/:filename', function(req, res) {
-		render(res, getFilename(req.params));
-    });
-
-    app.get('/:id/:module/:filename/:size', function(req, res) {
-
-        var srcPath = getFilename(req.params),
-			size = req.params.size,
-			dstPath = srcPath + '.' + size + TMP;
-
-		fs.exists(dstPath, function(exists) {
+	function resizeRender(res, resizeParams) {
+    	fs.exists(resizeParams.dstPath, function(exists) {
             if (exists) {
-            	render(res, dstPath);
+            	render(res, resizeParams.dstPath);
             } else {
-            	console.log(srcPath);
-            	console.log(dstPath);
-
-                im.resize({
-                    srcPath: srcPath,
-                    dstPath: dstPath,
-                    width:   size + '\>',
-                    quality: 0.8,
-                    strip: true,
-                    sharpening: 0,
-                    filter: false,
-                }, function(err) {
+                im.resize(resizeParams, function(err) {
                     if (err) {
-                    	console.log(err);
                         res.writeHead(500, {
 							'Content-type': 'text/plain'
 						});
 						res.end(err + '\n');
                     } else {
-                    	render(res, dstPath);
+                    	render(res, resizeParams.dstPath);
                     }
                 });
             }
+        });
+    }
+
+	app.get('/:id/:module/:filename', function(req, res) {
+		render(res, getFilename(req.params));
+    });
+
+    app.get('/:id/:module/:filename/:width', function(req, res) {
+
+        var srcPath = getFilename(req.params),
+			width = req.params.width;
+
+		resizeRender(res, {
+            srcPath: srcPath,
+            dstPath: srcPath + '.' + width + TMP,
+            width: width + '\>',
+            progressive: true,
+            sharpening: 0,
+            filter: false,
+        });
+    });
+
+    app.get('/:id/:module/:filename/:width/:height', function(req, res) {
+
+        var srcPath = getFilename(req.params),
+			width = req.params.width,
+			height = req.params.height;
+
+        resizeRender(res, {
+            srcPath: srcPath,
+            dstPath: srcPath + '.' + width + 'x' + height + TMP,
+            width: width,
+            height: height,
+            progressive: true,
+            sharpening: 0,
+            filter: false,
         });
     });
 };

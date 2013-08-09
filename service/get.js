@@ -13,7 +13,12 @@ exports.init = function(app) {
 
 	function render(err, res, content) {
         if (!isError(err, res)) {
-            res.writeHead(200, { 'Content-Type': '' });
+
+            res.writeHead(200, {
+				'Content-Type': '',
+				'Pragma': 'public',
+				'Cache-Control': 'private, max-age=10'
+            });
             res.end(content, 'utf-8');
         }
     }

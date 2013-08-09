@@ -6,6 +6,10 @@ var fs = require('fs'),
 
 exports.init = function(app) {
 
+    function getFilename(params) {
+        return path.resolve(__dirname, '../upload/' + params.id + '/' + params.module + '/' + params.filename);
+    }
+
 	function render(res, filename) {
 		fs.createReadStream(filename)
 			.on('error', function(err){
@@ -31,14 +35,10 @@ exports.init = function(app) {
 			.pipe(res);
 	}
 
-	function getFilename(params) {
-		return path.resolve(__dirname, '../upload/' + params.id + '/' + params.module + '/' + params.filename);
-	}
-
 	function resizeRender(res, resizeParams) {
-    	fs.exists(resizeParams.dstPath, function(exists) {
+        fs.exists(resizeParams.dstPath, function(exists) {
             if (exists) {
-            	render(res, resizeParams.dstPath);
+                render(res, resizeParams.dstPath);
             } else {
                 im.resize(resizeParams, function(err) {
                     if (err) {
@@ -47,7 +47,7 @@ exports.init = function(app) {
 						});
 						res.end(err + '\n');
                     } else {
-                    	render(res, resizeParams.dstPath);
+                        render(res, resizeParams.dstPath);
                     }
                 });
             }

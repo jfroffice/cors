@@ -12,10 +12,6 @@ var express = require('express'),
 	path = require('path'),
 	app = express();
 
-livereload(app, {
-	watchDir: __dirname + '/public'
-});
-
 // all environments
 app.set('port', process.env.PORT || config.port);
 app.use(express.logger('dev'));

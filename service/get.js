@@ -1,13 +1,12 @@
 var fs = require('fs'),
-	path = require('path');
+	path = require('path'),
+	TMP = '.tmp',
+	OK_TMP = '.ok' + TMP,
+    im = require('imagemagick');
 
 exports.init = function(app) {
 
-	app.get('/:id/:module/:filename', function(req, res) {
-
-        var tmp = '../upload/' + req.params.id + '/' + req.params.module + '/' + req.params.filename,
-			filename = path.resolve(__dirname, tmp);
-
+	function render(res, filename) {
 		fs.createReadStream(filename)
 			.on('error', function(err){
 				if (err.code === 'ENOENT'){
@@ -30,5 +29,49 @@ exports.init = function(app) {
 				});
 			})
 			.pipe(res);
+	}
+
+	function getFilename(params) {
+		return path.resolve(__dirname, '../upload/' + params.id + '/' + params.module + '/' + params.filename);
+	}
+
+	app.get('/:id/:module/:filename', function(req, res) {
+		render(res, getFilename(req.params));
+    });
+
+    app.get('/:id/:module/:filename/:size', function(req, res) {
+
+        var srcPath = getFilename(req.params),
+			size = req.params.size,
+			dstPath = srcPath + '.' + size + TMP;
+
+		fs.exists(dstPath, function(exists) {
+            if (exists) {
+            	render(res, dstPath);
+            } else {
+            	console.log(srcPath);
+            	console.log(dstPath);
+
+                im.resize({
+                    srcPath: srcPath,
+                    dstPath: dstPath,
+                    width:   size + '\>',
+                    quality: 0.8,
+                    strip: true,
+                    sharpening: 0,
+                    filter: false,
+                }, function(err) {
+                    if (err) {
+                    	console.log(err);
+                        res.writeHead(500, {
+							'Content-type': 'text/plain'
+						});
+						res.end(err + '\n');
+                    } else {
+                    	render(res, dstPath);
+                    }
+                });
+            }
+        });
     });
 };

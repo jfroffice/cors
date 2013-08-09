@@ -28,7 +28,7 @@ exports.init = function(app) {
 			.on('open', function(){
 				res.writeHead(200, {
 					'Pragma': 'public',
-					'Cache-Control': 'private, max-age=10',
+					'Cache-Control': 'private, max-age=2',
 					'Content-type': ''
 				});
 			})

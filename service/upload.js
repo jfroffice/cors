@@ -1,6 +1,6 @@
 var fs = require('fs'),
     mkdirp = require('mkdirp'),
-	path = require('path');
+    path = require('path');
 
 exports.init = function(app) {
 
@@ -16,9 +16,8 @@ exports.init = function(app) {
 
     app.post('/', function(req, res) {
 
-		var file = getFile(req.files),
-            data = req.body.data ? JSON.parse(req.body.data) : null,
-            dst = '../upload/';
+        var file = getFile(req.files),
+            data = req.body.data ? JSON.parse(req.body.data) : null;
 
         if (!file) {
             res.send({ err: 'no files received'});
@@ -27,13 +26,18 @@ exports.init = function(app) {
 
         // check if id in allow ?
         // if not refuse CORS
-        var filename;
+        var filename,
+            dirfile;
 
         if (data) {
-            filename = data.id + '/' + data.module + '/' + (data.filename || file.name);
+            filename = data.id + '/' + data.module + '/' + file.name;
+            dirfile = '../upload/' + data.id + '/' + data.module + '/';
 
-            var root = path.resolve(__dirname, dst),
-                newPath = path.resolve(__dirname, dst + filename);
+            var root = path.resolve(__dirname, dirfile),
+                newPath = path.resolve(__dirname, dirfile + file.name);
+
+            console.log(root);
+            console.log(newPath);
 
             mkdirp.sync(root);
 
@@ -47,5 +51,5 @@ exports.init = function(app) {
         res.send({
             url: 'http://' + req.headers.host + '/' + filename
         });
-   });
+    });
 };

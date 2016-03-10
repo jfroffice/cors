@@ -32,7 +32,7 @@ exports.init = function(app) {
 	    .on('open', function(){
 		res.writeHead(200, {
 		    'Pragma': 'public',
-		    'Cache-Control': 'private, max-age=2',
+		    'Cache-Control': 'public, max-age=864000000',
 		    'Content-type': ''
 		});
 	    })
@@ -105,3 +105,5 @@ exports.init = function(app) {
         resizeRenderWidthHeight(res, getFilename(req.params), req.params.width, req.params.height);
     });
 };
+
+

@@ -1,4 +1,4 @@
-FROM node:6.6
+FROM node:4.5
 
 RUN echo Europe/Paris >/etc/timezone && dpkg-reconfigure -f noninteractive tzdata
 
@@ -15,12 +15,8 @@ WORKDIR /usr/src/app
 COPY src/package.json /usr/src/app/
 RUN npm install --no-optional
 
-#COPY src/process.yml /usr/src/app/
-RUN npm install pm2 -g
-RUN pm2 install pm2-logrotate
-
 # copying dockerfile so force rebuild that might be unnecessary
 COPY src/ /usr/src/app/
 
 EXPOSE 8001
-CMD ["pm2", "start", "--no-daemon", "process.yml", "--env", "production"]
+CMD ["node", "app.js"]

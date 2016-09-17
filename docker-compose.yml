@@ -1,6 +1,7 @@
 web:
   build: .
   volumes:
+  - ./public:/usr/src/app/public
   - ./upload:/usr/src/app/upload
   ports:
   - "8001:8001"

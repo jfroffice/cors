@@ -1,5 +1,5 @@
 {
-  "name": "express-cors-livereload",
+  "name": "express-cors",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,7 +7,6 @@
   },
   "dependencies": {
     "express": "3.2.3",
-    "express-livereload": "*",
     "cors": "*",
     "mkdirp": "*",
     "imagemagick": "*"

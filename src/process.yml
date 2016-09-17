@@ -1,0 +1,14 @@
+apps:
+  - name   : "ppadb"
+    script : app.js
+    instances: 2
+    env:
+        NODE_ENV: "development"
+    env_production:
+        NODE_ENV: "production"
+    max_memory_restart : 200M
+    merge_logs         : true
+    log_file           : "combined.log"
+    error_file         : "err.log"
+    out_file"          : "out.log"
+    log_date_format"   : "MM/DD/YYYY HH:mm:ss"

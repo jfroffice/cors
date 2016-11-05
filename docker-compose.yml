@@ -1,4 +1,5 @@
 web:
+  restart: always
   build: .
   volumes:
   - ./public:/usr/src/app/public

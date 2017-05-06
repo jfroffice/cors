@@ -3,6 +3,9 @@ var fs = require('fs'),
     TMP = '.tmp',
     im = require('imagemagick');
 
+var sharp = require('sharp');
+var smartcrop = require('smartcrop-sharp');
+
 exports.init = function(app) {
 
     function getFilename(params) {
@@ -13,14 +16,10 @@ exports.init = function(app) {
 	   fs.createReadStream(filename)
 	    .on('error', function(err){
     		if (err.code === 'ENOENT'){
-    		    res.writeHead(404, {
-    			'Content-type': 'text/plain'
-    		    });
+    		    res.writeHead(404, { 'Content-type': 'text/plain' });
     		    res.end('404 Not Found\n');
     		} else {
-    		    res.writeHead(500, {
-    			'Content-type': 'text/plain'
-    		    });
+    		    res.writeHead(500, { 'Content-type': 'text/plain' });
     		    res.end(err + '\n');
     		}
 	    })
@@ -39,13 +38,22 @@ exports.init = function(app) {
             if (exists) {
                 render(res, resizeParams.dstPath);
             } else {
-                im.resize(resizeParams, function(err) {
-                    if (err) {
-                        res.writeHead(500, { 'Content-type': 'text/plain' });
-                        res.end(err + '\n');
-                    } else {
+                var width = +resizeParams.width;
+                var height = +(resizeParams.height || resizeParams.width);
+                smartcrop.crop(resizeParams.srcPath, {width: width, height: height}).then(function(result) {
+                  var crop = result.topCrop;
+                  console.log(crop);
+                  sharp(resizeParams.srcPath)
+                    .extract({width: crop.width, height: crop.height, left: crop.x, top: crop.y})
+                    .resize(width, height)
+                    .toFile(resizeParams.dstPath, function(err) {
+                        if (err) {
+                            res.writeHead(500, { 'Content-type': 'text/plain' });
+                            res.end(err + '\n');
+                        }
+
                         render(res, resizeParams.dstPath);
-                    }
+                    });
                 });
             }
         });
@@ -55,7 +63,7 @@ exports.init = function(app) {
         resizeRender(res, {
             srcPath: srcPath,
             dstPath: srcPath + '.' + width + TMP,
-            width: width + '\>',
+            width: width, // + '\>',
             progressive: true,
             sharpening: 0,
             filter: false,

@@ -6,9 +6,11 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "express": "3.2.3",
     "cors": "*",
+    "express": "3.2.3",
+    "imagemagick": "*",
     "mkdirp": "*",
-    "imagemagick": "*"
+    "sharp": "^0.17.3",
+    "smartcrop-sharp": "^1.0.5"
   }
 }

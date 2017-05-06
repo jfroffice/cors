@@ -1,7 +1,6 @@
 var fs = require('fs'),
     path = require('path'),
     TMP = '.tmp',
-    OK_TMP = '.ok' + TMP,
     im = require('imagemagick');
 
 exports.init = function(app) {
@@ -10,31 +9,27 @@ exports.init = function(app) {
         return path.resolve(__dirname, '../upload/' + params.id + '/' + params.module + '/' + params.filename);
     }
 
-    function getFilenameId(params) {
-        return path.resolve(__dirname, '../upload/' + params.id);
-    }
-
     function render(res, filename) {
-	fs.createReadStream(filename)
+	   fs.createReadStream(filename)
 	    .on('error', function(err){
-		if (err.code === 'ENOENT'){
-		    res.writeHead(404, {
-			'Content-type': 'text/plain'
-		    });
-		    res.end('404 Not Found\n');
-		} else {
-		    res.writeHead(500, {
-			'Content-type': 'text/plain'
-		    });
-		    res.end(err + '\n');
-		}
+    		if (err.code === 'ENOENT'){
+    		    res.writeHead(404, {
+    			'Content-type': 'text/plain'
+    		    });
+    		    res.end('404 Not Found\n');
+    		} else {
+    		    res.writeHead(500, {
+    			'Content-type': 'text/plain'
+    		    });
+    		    res.end(err + '\n');
+    		}
 	    })
 	    .on('open', function(){
-		res.writeHead(200, {
-		    'Pragma': 'public',
-		    'Cache-Control': 'public, max-age=864000000',
-		    'Content-type': ''
-		});
+    		res.writeHead(200, {
+    		    'Pragma': 'public',
+    		    'Cache-Control': 'public, max-age=864000000',
+    		    'Content-type': ''
+    		});
 	    })
 	    .pipe(res);
     }
@@ -46,10 +41,8 @@ exports.init = function(app) {
             } else {
                 im.resize(resizeParams, function(err) {
                     if (err) {
-                        res.writeHead(500, {
-			    'Content-type': 'text/plain'
-			});
-			res.end(err + '\n');
+                        res.writeHead(500, { 'Content-type': 'text/plain' });
+                        res.end(err + '\n');
                     } else {
                         render(res, resizeParams.dstPath);
                     }
@@ -81,20 +74,8 @@ exports.init = function(app) {
         });
     }
 
-    app.get('/get/:id', function(req, res) {
-        render(res, getFilenameId(req.params));
-    });
-
-    app.get('/get/:id/:width', function(req, res) {
-        resizeRenderWidth(res, getFilenameId(req.params), req.params.width);
-    });
-
-    app.get('/get/:id/:width/:height', function(req, res) {
-        resizeRenderWidthHeight(res, getFilenameId(req.params), req.params.width, req.params.height);
-    });
-
     app.get('/:id/:module/:filename', function(req, res) {
-	render(res, getFilename(req.params));
+        render(res, getFilename(req.params));
     });
 
     app.get('/:id/:module/:filename/:width', function(req, res) {

@@ -10,7 +10,7 @@
     "express": "3.21.2",
     "imagemagick": "*",
     "mkdirp": "*",
-    "sharp": "^0.17.3",
+    "sharp": "^0.18.1",
     "smartcrop-sharp": "^1.0.5"
   }
 }

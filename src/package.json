@@ -1,13 +1,13 @@
 {
   "name": "express-cors",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "start": "node app.js"
   },
   "dependencies": {
     "cors": "*",
-    "express": "3.2.3",
+    "express": "3.21.2",
     "imagemagick": "*",
     "mkdirp": "*",
     "sharp": "^0.17.3",

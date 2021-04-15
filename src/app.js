@@ -8,25 +8,34 @@ var express = require('express'),
 	config = require('./config'),
 	upload = require('./service/upload'),
 	get = require('./service/get'),
-	path = require('path'),
-	app = express();
+	// path = require('path'),
+    methodOverride = require('method-override'),
+    morgan = require('morgan'),
+    LOGGER = 'development' === env ? 'tiny' : 'short',
+	app = express(),
+    env = app.get('env'),
+    logger = require('./logger').get();
+
+var errorhandler = require('errorhandler');
+var serveStatic = require('serve-static');
+var bodyParser = require('body-parser');
 
 // all environments
 app.set('port', process.env.PORT || config.port);
-app.use(express.logger('dev'));
-app.use(express.bodyParser({
-    uploadDir: __dirname + '/upload'
-}));
-app.use(express.methodOverride());
+if (process.env.NODE_ENV !== 'development') {
+    app.use(morgan(LOGGER, { stream: logger.stream }));
+}
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
+app.use(methodOverride());
 app.use(cors({
 	origin: config.cors.origin
 }));
-app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(serveStatic('public'));
 
 // development only
 if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
+    app.use(errorhandler());
 }
 
 upload.init(app);

@@ -1,4 +1,4 @@
-FROM node:6.11
+FROM node:14
 
 RUN echo Europe/Paris >/etc/timezone && dpkg-reconfigure -f noninteractive tzdata
 

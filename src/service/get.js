@@ -87,6 +87,7 @@ exports.init = function(app) {
     });
 
     app.get('/:id/:module/:filename/:width', function(req, res) {
+
         resizeRenderWidth(res, getFilename(req.params), req.params.width);
     });
 

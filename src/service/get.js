@@ -1,7 +1,6 @@
 var fs = require('fs'),
     path = require('path'),
-    TMP = '.tmp',
-    im = require('imagemagick');
+    TMP = '.tmp';
 
 var sharp = require('sharp');
 var smartcrop = require('smartcrop-sharp');

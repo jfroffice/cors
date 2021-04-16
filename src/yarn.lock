@@ -508,6 +508,11 @@ kuler@^2.0.0:
   resolved "https://registry.yarnpkg.com/kuler/-/kuler-2.0.0.tgz#e2c570a3800388fb44407e851531c1d670b061b3"
   integrity sha512-Xq9nH7KlWZmXAtodXDDRE7vs6DU1gTU8zYDHDiWLSip45Egwq3plLHzPn27NgvzL2r1LMPC1vdqh98sQxtqj4A==
 
+libvips@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/libvips/-/libvips-0.0.2.tgz#9c7c87916f5b324358eb721fef8097cbc2644e54"
+  integrity sha1-nHyHkW9bMkNY63If74CXy8JkTlQ=
+
 logform@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/logform/-/logform-2.2.0.tgz#40f036d19161fc76b68ab50fdc7fe495544492f2"
@@ -905,18 +910,6 @@ simple-swizzle@^0.2.2:
   integrity sha1-pNprY1/8zMoz9w0Xy5JZLeleVXo=
   dependencies:
     is-arrayish "^0.3.1"
-
-smartcrop-sharp@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/smartcrop-sharp/-/smartcrop-sharp-2.0.3.tgz#1845e098fe38769ba04dcf9de65148a5da75dc2c"
-  integrity sha512-MZHImAELtI7KkzaXm3dL11hkkE8Ix0BTKzdV4zxaClcS7C+HAuh4BieGM9EJ/JkDzQ9F8rR04pNMB5uevFVOJg==
-  dependencies:
-    smartcrop "^2.0.2"
-
-smartcrop@^2.0.2:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/smartcrop/-/smartcrop-2.0.3.tgz#067aa8af6ebe0954e818f4cdce28a3f87579873e"
-  integrity sha512-EXkHPLf24H6KrYwCnUY+Y9ll+OPmFjmGc7wxiTfuUXt+WBXGTYR3qN5F3Df1Pk0TF/3rHCtOmPLQrvQ+QQOBWQ==
 
 stack-trace@0.0.x:
   version "0.0.10"

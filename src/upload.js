@@ -37,17 +37,18 @@ exports.init = function(app) {
                 return;
             }
 
-            let filename;
+            let urlFilename;
 
             if (!fields || !fields.data) {
-                filename = 'get/' + path.basename(file.path);
+                urlFilename = 'get/' + path.basename(file.path);
             } else {
-                const { id, module } = JSON.parse(fields.data);
-                let dirfile = './upload/' + id + '/' + module + '/';
-                filename = id + '/' + module + '/' + file.name;
+                const { id, module, filename } = JSON.parse(fields.data);
+                const realFilename = filename || file.name;
+                const dirfile = './upload/' + id + '/' + module + '/';
+                urlFilename = id + '/' + module + '/' + realFilename;
 
                 var root = path.resolve(__dirname, dirfile),
-                    newPath = path.resolve(__dirname, dirfile + file.name);
+                    newPath = path.resolve(__dirname, dirfile + realFilename);
 
                 console.log(root);
                 console.log(newPath);
@@ -64,7 +65,7 @@ exports.init = function(app) {
             }
 
             res.send({
-                url: req.protocol + '://' + req.headers.host + '/' + filename
+                url: req.protocol + '://' + req.headers.host + '/' + urlFilename
             });
         });
     });

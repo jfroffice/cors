@@ -1,14 +1,12 @@
-var fs = require('fs'),
-    path = require('path'),
-    TMP = '.tmp';
-
-var sharp = require('sharp');
+var fs = require('fs');
+var path = require('path');
 var smartcrop = require('smartcrop-sharp');
+var sharp = require('sharp');
+var TMP = '.tmp';
 
 exports.init = function(app) {
-
     function getFilename(params) {
-        return path.resolve(__dirname, '../upload/' + params.id + '/' + params.module + '/' + params.filename);
+        return path.resolve(__dirname, './upload/' + params.id + '/' + params.module + '/' + params.filename);
     }
 
     function render(res, filename) {
@@ -86,7 +84,6 @@ exports.init = function(app) {
     });
 
     app.get('/:id/:module/:filename/:width', function(req, res) {
-
         resizeRenderWidth(res, getFilename(req.params), req.params.width);
     });
 

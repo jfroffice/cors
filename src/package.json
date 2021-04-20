@@ -1,13 +1,12 @@
 {
-  "name": "express-cors",
-  "version": "0.1.1",
+  "name": "ppa-upload",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "node app.js",
     "start": "NODE_ENV=production node app.js"
   },
   "dependencies": {
-    "cors": "*",
     "errorhandler": "^1.5.1",
     "express": "^4.17.1",
     "formidable": "^1.2.2",

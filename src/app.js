@@ -4,9 +4,8 @@
 
 var express = require('express'),
 	http = require('http'),
-	cors = require('cors'),
 	config = require('./config'),
-//	upload = require('./service/upload'),
+	upload = require('./service/upload'),
  	get = require('./service/get'),
 	methodOverride = require('method-override'),
 	morgan = require('morgan'),
@@ -22,19 +21,25 @@ app.set('port', process.env.PORT || config.port);
 if (process.env.NODE_ENV !== 'development') {
 	app.use(morgan(LOGGER, { stream: logger.stream }));
 }
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", '*');
+    res.header("Access-Control-Allow-Credentials", true);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
+    next();
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride());
-app.use(cors({
-	origin: config.cors.origin
-}));
 app.use(serveStatic('public'));
 
 if ('development' == app.get('env')) {
 	app.use(errorhandler());
 }
 
-// upload.init(app);
+upload.init(app);
 get.init(app);
 
 http.createServer(app).listen(app.get('port'), function(){

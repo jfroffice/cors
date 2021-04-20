@@ -22,6 +22,7 @@ if (process.env.NODE_ENV !== 'development') {
 	app.use(morgan(LOGGER, { stream: logger.stream }));
 }
 
+app.enable('trust proxy');
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
     res.header("Access-Control-Allow-Credentials", true);
